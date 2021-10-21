@@ -32,17 +32,15 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      # Login against a Docker registry except on PR
-      # https://github.com/docker/login-action
-      - name: Log into registry ${{ env.REGISTRY }}
-        if: github.event_name != 'pull_request'
-      - uses: azure/docker-login@v1
+      - name: Login azure
+        uses: azure/docker-login@v1
         with:
           login-server: acronboarding.azurecr.io
           username: ${{ secrets.REGISTRY_USERNAME }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
 
-      - run: |
+      - name: Build and Push
+        run: |
           docker build -f API/Dockerfile -t acronboarding.azurecr.io/ob-net-core-auth-dwiki:latest .
           docker push acronboarding.azurecr.io/ob-net-core-auth-dwiki:latest
 
