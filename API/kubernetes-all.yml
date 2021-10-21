@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+      app: ob-net-core-auth-dwiki
+  name: ob-net-core-auth-dwiki
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+        app: ob-net-core-auth-dwiki
+  strategy:
+    rollingUpdate:
+        maxSurge: 1
+        maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+          app: ob-net-core-auth-dwiki
+      name: ob-net-core-auth-dwiki
+    spec:
+      containers:
+        - name: ob-net-core-auth-dwiki
+          image: acronboarding.azurecr.io/ob-net-core-auth-dwiki:latest
+          imagePullPolicy: Always
+          env:
+            - name: ConnectionStrings__DefaultConnection
+              valueFrom:
+                secretKeyRef:
+                  name: secret-dwiki
+                  key: ob-core-db
+            - name: AuthorizationServer__Address
+              valueFrom:
+                configMapKeyRef:
+                  name: map-dwiki
+                  key: ob-core-config
+          ports:
+          - containerPort: 80
+          resources:
+            requests:
+                cpu: 100m
+                memory: 128Mi
+            limits:
+                cpu: 125m
+                memory: 256Mi
+      restartPolicy: Always
+      serviceAccountName: ""
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: ob-net-core-auth-dwiki
+  name: ob-net-core-auth-dwiki
+spec:
+  ports:
+  - port: 80
+  type: LoadBalancer
+  selector:
+    app: ob-net-core-auth-dwiki
+status:
+  loadBalancer: {}
