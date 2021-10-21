@@ -41,7 +41,7 @@ jobs:
 
       - name: Build and Push
         run: |
-          docker build -f API/Dockerfile -t acronboarding.azurecr.io/ob-net-core-auth-dwiki:latest .
+          docker build . -f API/Dockerfile -t acronboarding.azurecr.io/ob-net-core-auth-dwiki:latest
           docker push acronboarding.azurecr.io/ob-net-core-auth-dwiki:latest
 
       # Extract metadata (tags, labels) for Docker
