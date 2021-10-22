@@ -29,7 +29,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: secret-dwiki
-                  key: ob-core-db
+                  key: ob-auth-db
             - name: AuthorizationServer__Address
               valueFrom:
                 configMapKeyRef:
